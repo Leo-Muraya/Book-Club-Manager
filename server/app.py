@@ -1,31 +1,25 @@
-#!/usr/bin/env python3
-
-# Standard library imports
-
 from flask import Flask
-from flask_cors import CORS
-from flask_migrate import Migrate
-from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
+from flask_jwt_extended import JWTManager
+from routes.authentification import auth_bp
+from routes.book_clubs import book_clubs_bp
+from routes.books import books_bp
+from routes.memberships import memberships_bp
+from routes.Discussions import discussions_bp
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.json.compact = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///book_club.db'
+app.config['JWT_SECRET_KEY'] = 'supersecretkey'
 
-metadata = MetaData(naming_convention={
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-})
-db = SQLAlchemy(metadata=metadata)
-migrate = Migrate(app, db)
-db.init_app(app)
+db = SQLAlchemy(app)
+jwt = JWTManager(app)
 
-api = Api(app)
-
-CORS(app)
-
+# Register blueprints
+app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(book_clubs_bp, url_prefix='/api')
+app.register_blueprint(books_bp, url_prefix='/api')
+app.register_blueprint(memberships_bp, url_prefix='/api')
+app.register_blueprint(discussions_bp, url_prefix='/api')
 
 if __name__ == '__main__':
-    app.run(port=5555, debug=True)
-
+    app.run(debug=True)
