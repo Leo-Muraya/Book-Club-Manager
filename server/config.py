@@ -1,31 +1,30 @@
-from flask import Flask
-from flask_cors import CORS
-from flask_migrate import Migrate
-from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
 import os
+from datetime import timedelta
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'supersecretkey')
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///book_club.db'
+    """Base configuration"""
+    SECRET_KEY = os.getenv('SECRET_KEY', 'your_secret_key')
+
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///bookclub.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'jwtsecret')
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.json.compact = False
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your_jwt_secret_key')
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)  
 
+    CORS_HEADERS = 'Content-Type'
+    
+    DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 
-metadata = MetaData(naming_convention={
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-})
-db = SQLAlchemy(metadata=metadata)
-migrate = Migrate(app, db)
-db.init_app(app)
+class DevelopmentConfig(Config):
+    """Development environment configuration"""
+    DEBUG = True
 
+class ProductionConfig(Config):
+    """Production environment configuration"""
+    DEBUG = False
 
-api = Api(app)
-
-CORS(app)
+config = {
+    "development": DevelopmentConfig,
+    "production": ProductionConfig,
+    "default": DevelopmentConfig
+}
