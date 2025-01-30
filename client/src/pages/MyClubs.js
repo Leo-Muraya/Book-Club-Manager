@@ -1,12 +1,5 @@
-import ClubList from "../components/ClubList";
-
-const MyClubs = () => {
-  return (
-    <div>
-      <h2>My Clubs</h2>
-      <ClubList />
-    </div>
-  );
-};
-
+import React from "react";
+function MyClubs() {
+  return <h1>My Clubs</h1>;
+}
 export default MyClubs;

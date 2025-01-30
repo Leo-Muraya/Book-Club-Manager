@@ -1,11 +1,15 @@
-const Home = () => {
-    return (
-      <div>
-        <h1>Welcome to Book Club Manager</h1>
-        <p>Find and join book clubs to discuss amazing books!</p>
-      </div>
-    );
-  };
-  
-  export default Home;
-  
+import React, { useEffect, useState } from "react";
+import { fetchClubs } from "../api";
+import ClubList from "../components/ClubList";
+
+function Home() {
+  const [clubs, setClubs] = useState([]);
+
+  useEffect(() => {
+    fetchClubs().then(setClubs);
+  }, []);
+
+  return <ClubList clubs={clubs} />;
+}
+
+export default Home;
