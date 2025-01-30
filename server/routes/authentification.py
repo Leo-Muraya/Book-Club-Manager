@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
-from models import db, User
+from server.models import db, User
 
 auth_bp = Blueprint('auth', __name__)
 bcrypt = Bcrypt()

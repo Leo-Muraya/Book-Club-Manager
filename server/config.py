@@ -1,30 +1,44 @@
 import os
-from datetime import timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Config:
     """Base configuration"""
-    SECRET_KEY = os.getenv('SECRET_KEY', 'your_secret_key')
-
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///bookclub.db')
+    SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "jwtsecretkey")  
+    JWT_ACCESS_TOKEN_EXPIRES = 3600  
+    SESSION_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
 
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your_jwt_secret_key')
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)  
+    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///db.sqlite3")
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL
 
-    CORS_HEADERS = 'Content-Type'
-    
-    DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 
 class DevelopmentConfig(Config):
-    """Development environment configuration"""
+    """Development configuration"""
     DEBUG = True
 
+
 class ProductionConfig(Config):
-    """Production environment configuration"""
+    """Production configuration"""
     DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+
+
+class TestingConfig(Config):
+    """Testing configuration"""
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = "sqlite:///test_db.sqlite3"
+
 
 config = {
     "development": DevelopmentConfig,
     "production": ProductionConfig,
-    "default": DevelopmentConfig
+    "testing": TestingConfig,
+    "default": DevelopmentConfig,
 }

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import db, Membership
+from server.models import db, Membership
 
 memberships_bp = Blueprint('memberships', __name__)
 
