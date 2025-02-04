@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
-from server.models import db, Discussion
+from app.models import db, Discussion
 
 discussions_bp = Blueprint('discussions', __name__)
 

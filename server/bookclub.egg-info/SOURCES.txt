@@ -1,0 +1,15 @@
+setup.py
+app/__init__.py
+app/config.py
+app/extensions.py
+app/models.py
+app/routes/Discussions.py
+app/routes/__init__.py
+app/routes/authentification.py
+app/routes/book_clubs.py
+app/routes/books.py
+bookclub.egg-info/PKG-INFO
+bookclub.egg-info/SOURCES.txt
+bookclub.egg-info/dependency_links.txt
+bookclub.egg-info/requires.txt
+bookclub.egg-info/top_level.txt
